@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Flasky{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+  <h1>{% if name %}입력하신 내용은, {{name}}이군요!{% else %}안녕하세요?{% endif %}!</h1>
+</div>
+{{wtf.quick_form(form)}}
+{% endblock %}
