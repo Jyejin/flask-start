@@ -1,4 +1,4 @@
-flask
-flask_wtf
-flask_bootstrap
-pandas
+Flask==0.11.1
+Flask-Bootstrap==3.3.7.1
+Flask-WTF==0.14.2
+pandas==0.18.1
