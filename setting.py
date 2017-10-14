@@ -4,8 +4,8 @@ class Settings():
         import pandas as pd
 
 
-        KOSPI=pd.read_csv("name_code_list_KOSPI.csv")
-        kosdaq=pd.read_csv("name_code_list_kosdaq.csv")
+        KOSPI=pd.read_csv("http://lopes.hufs.ac.kr/stockData/name_code_list_KOSPI.csv")
+        kosdaq=pd.read_csv("http://lopes.hufs.ac.kr/stockData/name_code_list_kosdaq.csv")
 
         KOSPI.columns=['KOSPI','CODE']
         kosdaq.columns=['KOSDAQ','CODE']
