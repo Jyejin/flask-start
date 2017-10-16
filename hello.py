@@ -31,8 +31,8 @@ def extract():
     result=None
     if form.validate_on_submit():
         name=form.name.data
+        result=testing.all_new(testing.split_stock_sentence(name))
         #table=db.extracting(name)
-        result=testing.split_stock_sentence(name)
         form.name.data=''
     return render_template('extract.html',form=form,name=name,result=result)
 

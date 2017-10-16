@@ -5,9 +5,9 @@ from urllib.request import HTTPError
 from bs4 import BeautifulSoup
 from setting import Settings
 
+settings=Settings()
 
 def extracting(name):
-    setting=Settings(name)
     url=setting.url_set()
 
     html=urlopen(url)
@@ -29,9 +29,10 @@ def extracting(name):
     return output
 
 def split_stock_sentence(sentence):
+
     """입력된 문장을 띄어쓰기를 이용해서 분리하는 함수"""
     def finding_lopes_stock_constants(x):
-        settings=Settings()
+
         # 아랫 줄은 '어때'와 같은 settings.lopes_stock_constants 에 들어 있는
         if True in [constant == x for constant in settings.lopes_stock_constants]:
             item = 'constants'
@@ -43,4 +44,57 @@ def split_stock_sentence(sentence):
 
     lopes_stock_constants =[finding_lopes_stock_constants(item) for item in sentence.split(' ')]
 
-    return(dict(zip(lopes_stock_constants, sentence.split(' '))))
+    return (dict(zip(lopes_stock_constants, sentence.split(' '))))
+
+def all_new(all_thing):
+    if 'item' in all_thing:
+        print('item이 있어요!')
+        print('아이템은 '+all_thing['item'])
+        if 'function' in all_thing:
+            print('function도 있어요!')
+            print('함수는 '+all_thing['function'])
+            result = all_function(all_thing)
+            if 'constants' in all_thing:
+                print('constants도 있어요!')
+                print(all_thing['constants'])
+        elif 'constants' in all_thing:
+            print('constants가 있어요!')
+            print(all_thing['constants'])
+    else:
+        print("뭘 도와드릴까요?")
+    return(result)
+
+def all_function(all_thing):
+
+    temp = settings.lopesStockFunctions.loc[all_thing['function'],'functions']+'('+'\''+all_thing['item']+'\''+')'
+    print(temp)
+    print(eval(temp))
+    return(eval(temp))
+
+def extracting_stock_code(name):
+    if name in settings.KOSPI.index:
+        code = settings.KOSPI.loc[name]
+    else:
+        code = settings.kosdaq.loc[name]
+    return(code)
+
+def price(name):
+    result = extracting_stock_code(name)
+    print(name)
+    print(type(result))
+    url= settings.url_set_naver(name)
+    html=urlopen(url)
+    soup = BeautifulSoup(html, "html.parser")
+    table = soup.find_all('table')
+
+    th_titles = table[1].find_all('th',{'class':{'title'}})
+    temp_titles =[th_title.text for th_title in th_titles]
+
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+    #print(temp_numbers)
+
+    df = DataFrame(temp_numbers, index= temp_titles)
+
+    output = name+'의 '+' 현재가는 '+temp_numbers[0]+'원입니다.'
+    return output
