@@ -7,7 +7,6 @@ import testing
 
 app=Flask(__name__)
 bootstrap = Bootstrap(app)
-app.config['SECRET_KEY']='hard to guess string'
 
 class NameForm(FlaskForm):
     name=StringField('내용을 입력하세요.',validators=[Required()])
