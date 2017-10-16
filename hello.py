@@ -1,7 +1,4 @@
 #-*- coding:utf-8 -*-
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
