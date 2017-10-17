@@ -1,9 +1,6 @@
 FROM ubuntu:latest
 MAINTAINER Juyoung Maeng "philogrammer@gmail.com"
 
-ENV LANG ko_KR.UTF-8
-CMD ["/bin/bash"]
-
 RUN apt-get update -y
 RUN apt-get install -y locales python3-pip python3-dev python3-virtualenv fabric \
       libpq-dev libjpeg-dev libxml2-dev libxslt-dev libfreetype6-dev libffi-dev \
