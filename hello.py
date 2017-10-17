@@ -1,3 +1,5 @@
+#-*- coding:utf-8 -*-
+
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from flask import Flask, request,render_template
@@ -20,7 +22,7 @@ def index():
     form=NameForm()
     if form.validate_on_submit():
         name=form.name.data
-        form.name.data=''
+        form.name.data=u''
     return render_template('index.html',form=form,name=name)
 
 @app.route('/',methods=['GET','POST'])
@@ -33,9 +35,9 @@ def extract():
         name=form.name.data
         result=testing.all_new(testing.split_stock_sentence(name))
         #table=db.extracting(name)
-        form.name.data=''
+        form.name.data=u''
     return render_template('extract.html',form=form,name=name,result=result)
 
 
 if __name__ == "__main__":
-    app.run(port=3499,debug=True)
+    app.run(port=5000,host='0.0.0.0',debug=True)
