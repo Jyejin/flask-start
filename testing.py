@@ -109,6 +109,12 @@ def per(name):
     url= settings.url_set_naver(name)
     html=urlopen(url)
     soup = BeautifulSoup(html, "html.parser")
+
+    # 장마감 문장 뽑아오기!
+    description= soup.find_all('div',{'class':{'description'}})
+    date = description[0].find_all('em',{'class':{'date'}})
+    # print(date[0].text) #뽑아온 것 확인하는 코드
+
     table = soup.find_all('table')
 
     th_titles = table[1].find_all('th',{'class':{'title'}})
@@ -121,5 +127,5 @@ def per(name):
     df = DataFrame(temp_numbers, index= temp_titles)
 
     #삼성전자의 PER(주가수익비율)는 19.74입니다.
-    output = name+'의 '+'PER(주가수익비율)는 '+temp_numbers[16]+'입니다.'
+    output = name+'의 '+'PER(주가수익비율)는 '+temp_numbers[16]+'입니다.'+'[' + date[0].text + ']'
     return output
