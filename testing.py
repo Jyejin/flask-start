@@ -71,20 +71,15 @@ def all_function(all_thing):
     print(eval(temp))
     return(eval(temp))
 
-def extracting_stock_code(name):
-    if name in settings.KOSPI.index:
-        code = settings.KOSPI.loc[name]
-    else:
-        code = settings.kosdaq.loc[name]
-    return code
+
 
 def price(name):
     data=extracting(name)
-    output = name+'의 '+' 현재가는 '+data.loc['현재가']+'원입니다.'
+    output = name+'의 '+' 현재가는 '+data.loc['현재가'][0]+'원입니다.'
     return output
 
 def per(name):
-    result = extracting_stock_code(name)
+    result = settings.extracting_stock_code(name)
     print(name)
     print(type(result))
     url= settings.url_set_naver(name)
@@ -109,4 +104,69 @@ def per(name):
 
     #삼성전자의 PER(주가수익비율)는 19.74입니다.
     output = name+'의 '+'PER(주가수익비율)는 '+temp_numbers[16]+'입니다.'+'[' + date[0].text + ']'
+    return output
+
+def closeYest(name):
+    data=extracting(name)
+    output=name+' 전일가는 '+data.loc['전일가'][0]+'원입니다.'
+    return output
+
+def priceOpen(name):
+    data=extracting(name)
+    output =name+' 시초가 '+data.loc['시가'][0]+'원입니다.'
+    return output
+
+def low(name):
+    data=extracting(name)
+    output = name+' 오늘 최저가는 '+data.loc['저가'][0]+'원입니다.'
+    return output
+
+def high(name):
+    data=extracting(name)
+    output = name+' 오늘 최고가는 '+data.loc['고가'][0]+'원입니다.'
+    return output
+
+def tradingValue(name):
+    data=extracting(name)
+    output = name+' 오늘 거래대금 '+data.loc['거래대금(백만)'][0].strip()+'백만원입니다.'
+    return output
+
+def high52(name):
+    data=extracting(name)
+    output = name+' 52주 최고가 '+data.loc['52주 최고'][0].strip()+'원입니다.'
+    return output
+
+def low52(name):
+    data=extracting(name)
+    output = name+' 오늘 52주 최저가 '+data.loc['52주 최저'][0].strip()+'원입니다.'
+    return output
+
+def shares(name):
+    data=extracting(name)
+    output = name+' 주식 수 '+data.loc['상장주식수'][0].strip()+'주입니다.'
+    return output
+
+def marketCap(name):
+    data=extracting(name)
+    output = name+' 시가총액 '+data.loc['시가총액'][0].strip()+'원입니다.'
+    return output
+
+def eps(name):
+    data=extracting(name)
+    output = name+' EPS(주당순이익)는 '+data.loc['EPS'][0].strip()+'입니다.'
+    return output
+
+def foreignShare(name):
+    data=extracting(name)
+    output = name+' 외국인 주식수 '+data.loc['외국인현재'][0].strip()+'입니다.'
+    return output
+
+def parValue(name):
+    data=extracting(name)
+    output = name+' 액면가 '+data.loc['액면가'][0].strip()+'입니다.'
+    return output
+
+def capitalStock(name):
+    data=extracting(name)
+    output=name+' 자본금 '+data.loc['자본금'][0].strip()+'원입니다.'
     return output
