@@ -11,7 +11,7 @@ from setting import Settings
 settings=Settings()
 
 def extracting(name):
-    url=setting.url_set()
+    url=settings.url_set_naver(name)
 
     html=urlopen(url)
     soup = BeautifulSoup(html, "html.parser")
@@ -25,11 +25,7 @@ def extracting(name):
 
     df=DataFrame(temp_numbers, index= temp_titles)
 
-    form='''{0} 현재가{1},전일대비등락률{2},거래량{3}입니다. 거래대금{4}입니다. 전일가는 {5}었습니다. 오늘의 시가{6},고가{7},저가{8}원입니다.'''
-    output=form.format(name,df.loc['현재가'][0],df.loc['등락률(%)'][0],df.loc['거래량'][0],df.loc['거래대금(백만)'][0],df.loc['전일가'][0],df.loc['시가'][0],df.loc['고가'][0],df.loc['저가'][0])
-
-
-    return output
+    return df
 
 def split_stock_sentence(sentence):
 
@@ -83,24 +79,8 @@ def extracting_stock_code(name):
     return code
 
 def price(name):
-    result = extracting_stock_code(name)
-    print(name)
-    print(type(result))
-    url= settings.url_set_naver(name)
-    html=urlopen(url)
-    soup = BeautifulSoup(html, "html.parser")
-    table = soup.find_all('table')
-
-    th_titles = table[1].find_all('th',{'class':{'title'}})
-    temp_titles =[th_title.text for th_title in th_titles]
-
-    td_numbers = table[1].find_all('td',{'class':{'num'}})
-    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
-    #print(temp_numbers)
-
-    df = DataFrame(temp_numbers, index= temp_titles)
-
-    output = name+'의 '+' 현재가는 '+temp_numbers[0]+'원입니다.'
+    data=extracting(name)
+    output = name+'의 '+' 현재가는 '+data.loc['현재가']+'원입니다.'
     return output
 
 def per(name):
@@ -130,3 +110,5 @@ def per(name):
     #삼성전자의 PER(주가수익비율)는 19.74입니다.
     output = name+'의 '+'PER(주가수익비율)는 '+temp_numbers[16]+'입니다.'+'[' + date[0].text + ']'
     return output
+
+print(price('삼성전자'))
