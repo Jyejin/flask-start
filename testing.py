@@ -110,5 +110,3 @@ def per(name):
     #삼성전자의 PER(주가수익비율)는 19.74입니다.
     output = name+'의 '+'PER(주가수익비율)는 '+temp_numbers[16]+'입니다.'+'[' + date[0].text + ']'
     return output
-
-print(price('삼성전자'))
