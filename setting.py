@@ -1,5 +1,5 @@
 #-*- coding:utf-8 -*-
-
+#데이터를 불러오고 링크를 변환하는 곳입니다.
 class Settings():
     def __init__(self):
         import pandas as pd

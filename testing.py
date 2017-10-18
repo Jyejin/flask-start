@@ -1,6 +1,6 @@
 
 #-*- coding:utf-8 -*-
-
+# output으로 보여질 함수들이 있는 곳입니다
 import pandas as pd
 from pandas import DataFrame
 from urllib.request import urlopen
@@ -43,13 +43,14 @@ def split_stock_sentence(sentence):
             item = 'function'
         else:
             item = 'item'
-        return(item)
+        return item
 
     lopes_stock_constants =[finding_lopes_stock_constants(item) for item in sentence.split(' ')]
 
     return (dict(zip(lopes_stock_constants, sentence.split(' '))))
 
 def all_new(all_thing):
+    result=None
     if 'item' in all_thing:
         print('item이 있어요!')
         print('아이템은 '+all_thing['item'])
@@ -65,7 +66,7 @@ def all_new(all_thing):
             print(all_thing['constants'])
     else:
         print("뭘 도와드릴까요?")
-    return(result)
+    return result
 
 def all_function(all_thing):
 
@@ -79,7 +80,7 @@ def extracting_stock_code(name):
         code = settings.KOSPI.loc[name]
     else:
         code = settings.kosdaq.loc[name]
-    return(code)
+    return code
 
 def price(name):
     result = extracting_stock_code(name)
