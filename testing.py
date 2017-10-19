@@ -71,6 +71,8 @@ def all_function(all_thing):
     print(eval(temp))
     return(eval(temp))
 
+# 이 아래에는 각자 돌아가는 함수만 넣습니다. 
+
 def extracting_stock_code(name):
     if name in settings.KOSPI.index:
         code = settings.KOSPI.loc[name]
