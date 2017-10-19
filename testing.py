@@ -10,22 +10,14 @@ from setting import Settings
 
 settings=Settings()
 
-def extracting(name):
+def extracting_stock_naver(name):
     url=settings.url_set_naver(name)
 
     html=urlopen(url)
     soup = BeautifulSoup(html, "html.parser")
     table = soup.find_all('table')
 
-    th_titles = table[1].find_all('th',{'class':{'title'}})
-    temp_titles =[th_title.text for th_title in th_titles]
-
-    td_numbers = table[1].find_all('td',{'class':{'num'}})
-    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
-
-    df=DataFrame(temp_numbers, index= temp_titles)
-
-    return df
+    return soup
 
 def split_stock_sentence(sentence):
 
@@ -71,21 +63,22 @@ def all_function(all_thing):
     print(eval(temp))
     return(eval(temp))
 
-
-
 def price(name):
-    data=extracting(name)
-    output = name+'의 '+' 현재가는 '+data.loc['현재가'][0]+'원입니다.'
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+
+    description= soup.find_all('div',{'class':{'description'}})
+    date = description[0].find_all('em',{'class':{'date'}})
+
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output = name+'의 '+' 현재가는 '+temp_numbers['현재가'][0]+'원입니다.'
     return output
 
 def per(name):
-    result = settings.extracting_stock_code(name)
-    print(name)
-    print(type(result))
-    url= settings.url_set_naver(name)
-    html=urlopen(url)
-    soup = BeautifulSoup(html, "html.parser")
 
+    soup=extracting_stock_naver(name)
     # 장마감 문장 뽑아오기!
     description= soup.find_all('div',{'class':{'description'}})
     date = description[0].find_all('em',{'class':{'date'}})
@@ -100,73 +93,186 @@ def per(name):
     temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
     #print(temp_numbers)
 
-    df = DataFrame(temp_numbers, index= temp_titles)
+    df = dataFrame(temp_numbers, index= temp_titles)
 
     #삼성전자의 PER(주가수익비율)는 19.74입니다.
     output = name+'의 '+'PER(주가수익비율)는 '+temp_numbers[16]+'입니다.'+'[' + date[0].text + ']'
     return output
 
 def closeYest(name):
-    data=extracting(name)
-    output=name+' 전일가는 '+data.loc['전일가'][0]+'원입니다.'
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+
+    description= soup.find_all('div',{'class':{'description'}})
+    date = description[0].find_all('em',{'class':{'date'}})
+
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output=name+' 전일가는 '+temp_numbers[5]+'원입니다.'
     return output
 
 def priceOpen(name):
-    data=extracting(name)
-    output =name+' 시초가 '+data.loc['시가'][0]+'원입니다.'
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+
+    description= soup.find_all('div',{'class':{'description'}})
+    date = description[0].find_all('em',{'class':{'date'}})
+
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output =name+' 시초가 '+temp_numbers[7]+'원입니다.'
     return output
 
 def low(name):
-    data=extracting(name)
-    output = name+' 오늘 최저가는 '+data.loc['저가'][0]+'원입니다.'
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+
+    description= soup.find_all('div',{'class':{'description'}})
+    date = description[0].find_all('em',{'class':{'date'}})
+
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output = name+' 오늘 최저가는 '+temp_numbers[11]+'원입니다.'
     return output
 
 def high(name):
-    data=extracting(name)
-    output = name+' 오늘 최고가는 '+data.loc['고가'][0]+'원입니다.'
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+
+    description= soup.find_all('div',{'class':{'description'}})
+    date = description[0].find_all('em',{'class':{'date'}})
+
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output = name+' 오늘 최고가는 '+temp_numbers[9]+'원입니다.'
     return output
 
 def tradingValue(name):
-    data=extracting(name)
-    output = name+' 오늘 거래대금 '+data.loc['거래대금(백만)'][0].strip()+'백만원입니다.'
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+
+    description= soup.find_all('div',{'class':{'description'}})
+    date = description[0].find_all('em',{'class':{'date'}})
+
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output = name+' 오늘 거래대금 '+temp_numbers[8].strip()+'백만원입니다.'
     return output
 
 def high52(name):
-    data=extracting(name)
-    output = name+' 52주 최고가 '+data.loc['52주 최고'][0].strip()+'원입니다.'
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output = name+' 52주 최고가 '+temp_numbers[18].strip()+'원입니다.'
     return output
 
 def low52(name):
-    data=extracting(name)
-    output = name+' 오늘 52주 최저가 '+data.loc['52주 최저'][0].strip()+'원입니다.'
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output = name+' 오늘 52주 최저가 '+temp_numbers[19].strip()+'원입니다.'
     return output
 
 def shares(name):
-    data=extracting(name)
-    output = name+' 주식 수 '+data.loc['상장주식수'][0].strip()+'주입니다.'
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+
+    description= soup.find_all('div',{'class':{'description'}})
+    date = description[0].find_all('em',{'class':{'date'}})
+
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output = name+' 주식 수 '+temp_numbers[21].strip()+'주입니다.'
     return output
 
 def marketCap(name):
-    data=extracting(name)
-    output = name+' 시가총액 '+data.loc['시가총액'][0].strip()+'원입니다.'
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+
+    description= soup.find_all('div',{'class':{'description'}})
+    date = description[0].find_all('em',{'class':{'date'}})
+
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output = name+' 시가총액 '+temp_numbers[20].strip()+'원입니다.'
     return output
 
 def eps(name):
-    data=extracting(name)
-    output = name+' EPS(주당순이익)는 '+data.loc['EPS'][0].strip()+'입니다.'
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output = name+' EPS(주당순이익)는 '+temp_numbers[17].strip()+'입니다.'
     return output
 
 def foreignShare(name):
-    data=extracting(name)
-    output = name+' 외국인 주식수 '+data.loc['외국인현재'][0].strip()+'입니다.'
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+
+    description= soup.find_all('div',{'class':{'description'}})
+    date = description[0].find_all('em',{'class':{'date'}})
+
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output = name+' 외국인 주식수 '+temp_numbers[22].strip()+'입니다.'
     return output
 
 def parValue(name):
-    data=extracting(name)
-    output = name+' 액면가 '+data.loc['액면가'][0].strip()+'입니다.'
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output = name+' 액면가 '+temp_numbers[10].strip()+'입니다.'
     return output
 
 def capitalStock(name):
-    data=extracting(name)
-    output=name+' 자본금 '+data.loc['자본금'][0].strip()+'원입니다.'
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output=name+' 자본금 '+temp_numbers[23].strip()+'원입니다.'
     return output
+
+def highestPrice(name):
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output =name+' 오늘 상한가격은 '+temp_numbers[12]+' 원입니다.'
+    return output
+
+def lowestPrice(name):
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output =name+' 오늘 하한가격은 '+temp_numbers[14]+' 원입니다.'
+    return output
+
+def volume(name):
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    output =name+' 오늘 거래량 '+temp_numbers[6]+' 입니다.'
+    return output
+
+print(eps('삼성전자'))
