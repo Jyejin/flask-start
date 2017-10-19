@@ -63,6 +63,46 @@ def all_function(all_thing):
     print(eval(temp))
     return(eval(temp))
 
+<<<<<<< HEAD
+=======
+def extracting_stock_code(name):
+    if name in settings.KOSPI.index:
+        code = settings.KOSPI.loc[name]
+    else:
+        code = settings.kosdaq.loc[name]
+    return code
+
+# 이 아래에는 각자 돌아가는 함수만 넣습니다.
+
+def marketCap(name):
+    result = extracting_stock_code(name)
+    url_form = settings.stock_sise_naver_url + str(result).zfill(6)
+    url=None
+    url=url_form.format(result=result)
+    html=urlopen(url)
+    soup = BeautifulSoup(html, "html.parser")
+
+    # 장마감 문장 뽑아오기!
+    description= soup.find_all('div',{'class':{'description'}})
+    date = description[0].find_all('em',{'class':{'date'}})
+    # print(date[0].text) #뽑아온 것 확인하는 코드
+
+    table = soup.find_all('table')
+
+    th_titles = table[1].find_all('th',{'class':{'title'}})
+    temp_titles =[th_title.text for th_title in th_titles]
+
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+    #print(temp_numbers)
+    # 아래 df는 자료가 잘 들어왔는지 확인하는 DataFrame
+    #df = DataFrame(temp_numbers, index= temp_titles)
+    # 삼성전자 시가총액은 3,503,749억원입니다. <2017년 10월 17일 기준>
+    output = name+' 시가총액은 '+temp_numbers[20]+' 입니다.'+'[' + date[0].text + ']'
+
+    return output
+
+>>>>>>> 1374acd389fc6737d160fd6804e2a9d6ccc40fa2
 def price(name):
     soup=extracting_stock_naver(name)
     table = soup.find_all('table')
