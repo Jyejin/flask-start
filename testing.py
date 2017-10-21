@@ -41,8 +41,7 @@ def split_stock_sentence(sentence):
 def all_function(all_thing):
     sentence= split_stock_sentence(all_thing)
     temp = settings.lopesStockFunctions.loc[sentence['function'],'functions']+'('+'\''+sentence['item']+'\''+')'
-    print(temp)
-    print(eval(temp))
+
     return(eval(temp))
 
 
