@@ -23,9 +23,9 @@ def extract():
     result=None
     if form.validate_on_submit():
         name=form.name.data
-        result=testing.all_new(testing.split_stock_sentence(name))
+        result=testing.all_function(name)
         form.name.data=u''
     return render_template('extract.html',form=form,name=name,result=result)
 
 if __name__ == "__main__":
-    app.run(port=5000,host='0.0.0.0',debug=True)
+    app.run(port=2331,debug=True)

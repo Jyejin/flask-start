@@ -37,28 +37,10 @@ def split_stock_sentence(sentence):
 
     return (dict(zip(lopes_stock_constants, sentence.split(' '))))
 
-def all_new(all_thing):
-    result=None
-    if 'item' in all_thing:
-        print('item이 있어요!')
-        print('아이템은 '+all_thing['item'])
-        if 'function' in all_thing:
-            print('function도 있어요!')
-            print('함수는 '+all_thing['function'])
-            result = all_function(all_thing)
-            if 'constants' in all_thing:
-                print('constants도 있어요!')
-                print(all_thing['constants'])
-        elif 'constants' in all_thing:
-            print('constants가 있어요!')
-            print(all_thing['constants'])
-    else:
-        print("뭘 도와드릴까요?")
-    return result
 
 def all_function(all_thing):
-
-    temp = settings.lopesStockFunctions.loc[all_thing['function'],'functions']+'('+'\''+all_thing['item']+'\''+')'
+    sentence= split_stock_sentence(all_thing)
+    temp = settings.lopesStockFunctions.loc[sentence['function'],'functions']+'('+'\''+sentence['item']+'\''+')'
     print(temp)
     print(eval(temp))
     return(eval(temp))
