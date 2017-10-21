@@ -63,8 +63,7 @@ def all_function(all_thing):
     print(eval(temp))
     return(eval(temp))
 
-<<<<<<< HEAD
-=======
+
 def extracting_stock_code(name):
     if name in settings.KOSPI.index:
         code = settings.KOSPI.loc[name]
@@ -102,7 +101,6 @@ def marketCap(name):
 
     return output
 
->>>>>>> 1374acd389fc6737d160fd6804e2a9d6ccc40fa2
 def price(name):
     soup=extracting_stock_naver(name)
     table = soup.find_all('table')
@@ -113,7 +111,7 @@ def price(name):
     td_numbers = table[1].find_all('td',{'class':{'num'}})
     temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
 
-    output = name+'의 '+' 현재가는 '+temp_numbers['현재가'][0]+'원입니다.'
+    output = name+'의 '+' 현재가는 '+temp_numbers[0]+'원입니다.'
     return output
 
 def per(name):
@@ -126,14 +124,9 @@ def per(name):
 
     table = soup.find_all('table')
 
-    th_titles = table[1].find_all('th',{'class':{'title'}})
-    temp_titles =[th_title.text for th_title in th_titles]
-
     td_numbers = table[1].find_all('td',{'class':{'num'}})
     temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
     #print(temp_numbers)
-
-    df = dataFrame(temp_numbers, index= temp_titles)
 
     #삼성전자의 PER(주가수익비율)는 19.74입니다.
     output = name+'의 '+'PER(주가수익비율)는 '+temp_numbers[16]+'입니다.'+'[' + date[0].text + ']'
@@ -315,4 +308,31 @@ def volume(name):
     output =name+' 오늘 거래량 '+temp_numbers[6]+' 입니다.'
     return output
 
-print(eps('삼성전자'))
+def percent(name):
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    if '-' in temp_numbers[4]:
+        output = name+' 오늘 '+temp_numbers[4].strip()+' 내렸습니다.'
+    elif '+' in temp_numbers[4]:
+        output = name+' 오늘 '+temp_numbers[4].strip()+' 올랐습니다.'
+
+    return output
+
+def netchange(name):
+    soup=extracting_stock_naver(name)
+    table = soup.find_all('table')
+    td_numbers = table[1].find_all('td',{'class':{'num'}})
+    temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+    if '하락' in temp_numbers[2]:
+        output = name+' 오늘 1주당 '+temp_numbers[2].strip()+'원 내렸습니다.'
+        output=output.replace('하락','')
+
+    elif '상승' in temp_numbers[2]:
+        output = name+' 오늘 1주당 '+temp_numbers[2].strip()+'원 올랐습니다.'
+        output=output.replace('상승 ','')
+
+    return output
