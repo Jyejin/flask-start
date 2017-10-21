@@ -4,8 +4,8 @@
 
 {% block page_content %}
 <div class="page-header">
-  <h1>코드 번호 알아보기!</h1>
+  <h1>Stock for LOPES</h1>
 </div>
 {{wtf.quick_form(form)}}
-  <h6>{%if name %} 결과는{{result}}입니다.{% endif %}</h6>
+  <h6>{%if name %}{{result}}{% endif %}</h6>
 {% endblock %}

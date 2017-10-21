@@ -1,17 +1,13 @@
 #-*- coding:utf-8 -*-
-
+#데이터를 불러오고 링크를 변환하는 곳입니다.
 class Settings():
     def __init__(self):
         import pandas as pd
 
 
-        KOSPI=pd.read_csv("http://lopes.hufs.ac.kr/stockData/name_code_list_KOSPI.csv")
-        kosdaq=pd.read_csv("http://lopes.hufs.ac.kr/stockData/name_code_list_kosdaq.csv")
+        KOSPI=pd.read_csv("http://lopes.hufs.ac.kr/stockData/name_code_list_KOSPI.csv",index_col='KOSPI_NAME')
+        kosdaq=pd.read_csv("http://lopes.hufs.ac.kr/stockData/name_code_list_kosdaq.csv",index_col='KOSDAQ_NAME')
 
-        KOSPI.columns=['KOSPI','CODE']
-        kosdaq.columns=['KOSDAQ','CODE']
-        KOSPI.index=KOSPI['KOSPI']
-        kosdaq.index=kosdaq['KOSDAQ']
         KOSPI=KOSPI['CODE']
         kosdaq=kosdaq['CODE']
 
@@ -22,6 +18,14 @@ class Settings():
 
         lopesStockFunctions = pd.read_csv("http://lopes.hufs.ac.kr/stockData/lopesStockFunction.csv", index_col= "index")
         self.lopesStockFunctions = lopesStockFunctions
+
+    def extracting_stock_code(self,name):
+        if name in self.KOSPI.index:
+            code = self.KOSPI.loc[name]
+        else:
+            code = self.kosdaq.loc[name]
+
+        return code
 
     def url_set_naver(self,name):
 
@@ -50,7 +54,6 @@ class Settings():
             result = 'stockFinanceList'
         elif data == 'priceList':
             result= 'stockDayList'
-
 
         url_form='https://www.samsungpop.com/mbw/trading/domesticStock.do?cmd={result}'
         url=None
