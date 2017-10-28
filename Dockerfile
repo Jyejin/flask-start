@@ -10,9 +10,7 @@ ENV LANG ko_KR.UTF-8
 ENV LANGUAGE ko_KR:ko
 ENV LC_ALL ko_KR.UTF-8
 
-RUN apt-get install -y python3-pip python3-dev python3-virtualenv fabric \
-      libpq-dev libjpeg-dev libxml2-dev libxslt-dev libfreetype6-dev libffi-dev \
-      postgresql-client git curl wget
+RUN apt-get install -y python3-pip python3-dev python3-virtualenv
       
 ADD . /flask-start
 WORKDIR /flask-start

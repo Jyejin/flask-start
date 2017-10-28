@@ -50,7 +50,11 @@ default = ["동철님절키워주세요", "예진이도왔니", "재환이형만
 @app.route('/message', methods=['GET', 'POST'])
 def message():
     userRequest = json.loads(request.get_data().decode('utf-8'))
-    print(userRequest)
+    
+    print("유저ID:",userRequest['user_key'])
+    print("메시지:",userRequest['content'])
+    print("Request:",userRequest)
+
     result=None
     if userRequest['content'] == '동철님절키워주세요' or userRequest['content'] == '예진이도왔니' or userRequest['content'] == '재환이형만족하시죠?':
         return "{\"message\": {\"text\":\"궁금하신 주식정보를 물어봐주세요\"},\"keyboard\": {\"type\": \"text\"}}"
@@ -75,5 +79,5 @@ def key():
 
 
 if __name__ == "__main__":
-    app.run(port=5000,host='0.0.0.0',debug=True)
+    app.run(port=8080,host='0.0.0.0',debug=True)
 
