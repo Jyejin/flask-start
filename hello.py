@@ -43,28 +43,29 @@ def extract():
     return render_template('extract.html',form=form,name=name,result=result)
 
 
-default = ["도와줘요홍길동"]
+default = ["동철님절키워주세요", "예진이도왔니", "재환이형만족하시죠?"]
+
+
 
 @app.route('/message', methods=['GET', 'POST'])
 def message():
     userRequest = json.loads(request.get_data().decode('utf-8'))
     print(userRequest)
     result=None
-    if userRequest['content'] == '도와줘요홍길동':
-        return """{"message": {"text":"궁금하신 주식정보를 물어봐주세요"},"keyboard": {"type": "text"}}"""
+    if userRequest['content'] == '동철님절키워주세요' or userRequest['content'] == '예진이도왔니' or userRequest['content'] == '재환이형만족하시죠?':
+        return "{\"message\": {\"text\":\"궁금하신 주식정보를 물어봐주세요\"},\"keyboard\": {\"type\": \"text\"}}"
 
-
-    elif userRequest['content'] == '엘지전자 최저가':
-        return """{"message": {"text":"삼성전자최저가는 삘릴리 입니다"},"keyboard": {"type": "text"}}"""
-
+    elif userRequest['content'] == '도와줘요':
+        return "{\"message\": {\"text\":\"\\n현재 증권친구 홍길동에서는\\n아래의 기능들을 써볼 수 있다네\\n\\n전일가\\n현재가\\n시가\\n저가\\n고가\\n거래대금(백만)\\n52주최고가\\n52주최저가\\n상장주식수\\n시가총액\\n자본금\\nPER\\nEPS\\n외국인현재\\n액면가\\n상한가\\n하한가\\n거래량\\n등락률\\n전일대비\"},\"keyboard\": {\"type\": \"text\"}}"
+	
 	
     else:
-        name=userRequest['content']
-        result=testing.all_new(testing.split_stock_sentence(name))
+        sentence=userRequest['content']
+        result=testing.all_function(sentence)
         print(result)
-        return """{"message": {"text":"삼성전자최저가는 삘릴리 입니다"},"keyboard": {"type": "text"}}"""
 
-
+        return "{\"message\": {\"text\":\"" + result + "\"},\"keyboard\": {\"type\": \"text\"}}"
+       
 
 # 챗봇 Keyboard Initialize 
 @app.route('/keyboard', methods=['GET', 'POST'])
