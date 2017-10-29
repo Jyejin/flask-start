@@ -5,11 +5,11 @@ class Settings():
         import pandas as pd
 
 
-        KOSPI=pd.read_csv("http://lopes.hufs.ac.kr/stockData/name_code_list_KOSPI.csv",index_col='KOSPI_NAME')
-        kosdaq=pd.read_csv("http://lopes.hufs.ac.kr/stockData/name_code_list_kosdaq.csv",index_col='KOSDAQ_NAME')
+        KOSPI = pd.read_csv("http://lopes.hufs.ac.kr/stockData/name_code_list_KOSPI.csv",index_col='KOSPI_NAME')
+        kosdaq = pd.read_csv("http://lopes.hufs.ac.kr/stockData/name_code_list_kosdaq.csv",index_col='KOSDAQ_NAME')
 
-        KOSPI=KOSPI['CODE']
-        kosdaq=kosdaq['CODE']
+        KOSPI = KOSPI['CODE']
+        kosdaq = kosdaq['CODE']
 
         #self.name=name
         self.KOSPI = KOSPI
@@ -30,13 +30,13 @@ class Settings():
     def url_set_naver(self,name):
 
         if name in self.KOSPI.index:
-            result= self.KOSPI.loc[name]
+            result = self.KOSPI.loc[name]
         else:
             result=self.kosdaq.loc[name]
 
-        url_form='http://finance.naver.com/item/sise.nhn?code=' + str(result).zfill(6)
-        url=None
-        url=url_form.format(result=result)
+        url_form ='http://finance.naver.com/item/sise.nhn?code=' + str(result).zfill(6)
+        url = None
+        url = url_form.format(result=result)
 
         return url
 
@@ -55,8 +55,8 @@ class Settings():
         elif data == 'priceList':
             result= 'stockDayList'
 
-        url_form='https://www.samsungpop.com/mbw/trading/domesticStock.do?cmd={result}'
-        url=None
-        url=url_form.format(result=result)
+        url_form = 'https://www.samsungpop.com/mbw/trading/domesticStock.do?cmd={result}'
+        url = None
+        url = url_form.format(result=result)
 
         return url

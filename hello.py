@@ -9,22 +9,22 @@ import testing
 
 app=Flask(__name__)
 bootstrap = Bootstrap(app)
-app.config['SECRET_KEY']='hard to guess string'
+app.config['SECRET_KEY'] = 'hard to guess string'
 
 class NameForm(FlaskForm):
-    name=StringField('내용을 입력하세요.',validators=[Required()])
-    submit=SubmitField('Submit')
+    name = StringField('내용을 입력하세요.',validators=[Required()])
+    submit = SubmitField('Submit')
 
 
 @app.route('/',methods=['GET','POST'])
 def extract():
-    name=None
-    form=NameForm()
-    result=None
+    name = None
+    form = NameForm()
+    result = None
     if form.validate_on_submit():
-        name=form.name.data
-        result=testing.all_function(name)
-        form.name.data=u''
+        name = form.name.data
+        result = testing.all_function(name)
+        form.name.data = u''
     return render_template('extract.html',form=form,name=name,result=result)
 
 if __name__ == "__main__":
