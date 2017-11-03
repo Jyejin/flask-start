@@ -60,3 +60,18 @@ class Settings():
         url = url_form.format(result=result)
 
         return url
+
+    def bitcoin(self,data):
+        import wget
+        import pandas as pd
+
+        url = 'http://lopes.hufs.ac.kr/stockData/stocks_10_27.h5'
+        filename = wget.download(url)
+        store = pd.HDFStore(filename)
+        df = store[data]
+
+        return df.head()
+
+
+#setting=Settings()
+#setting.bitcoin('KS_066570')

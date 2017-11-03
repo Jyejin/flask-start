@@ -22,6 +22,7 @@ def extracting_stock_naver(name):
 
     return soup
 
+
 def split_stock_sentence(sentence):
 
     """입력된 문장을 띄어쓰기를 이용해서 분리하는 함수"""
@@ -32,21 +33,28 @@ def split_stock_sentence(sentence):
             item = 'constants'
         elif True in [function == x for function in settings.lopesStockFunctions.index]:
             item = 'function'
-        else:
+        elif bool(x in settings.KOSPI.index or x in settings.kosdaq.index):
             item = 'item'
+        else:
+            item = 'error'
         return item
 
-    lopes_stock_constants = [finding_lopes_stock_constants(item) for item in sentence.split(' ')]
+    lopes_stock_constants =[finding_lopes_stock_constants(item) for item in sentence.split(' ')]
 
     return (dict(zip(lopes_stock_constants, sentence.split(' '))))
 
 
 def all_function(all_thing):
     sentence = split_stock_sentence(all_thing)
-    temp = settings.lopesStockFunctions.loc[sentence['function'],'functions']+'('+'\''+sentence['item']+'\''+')'
 
-    return(eval(temp))
+    if 'item' in sentence.keys() and not 'function' in sentence.keys():
+        temp = information(sentence['item'])
 
+    elif 'item' in sentence.keys() and 'function' in sentence.keys() :
+        temp = eval(settings.lopesStockFunctions.loc[sentence['function'],'functions']+'('+'\''+sentence['item']+'\''+')')
+    else:
+        temp = "다시 입력해 주세요"
+    return temp
 
 def extracting_stock_code(name):
     if name in settings.KOSPI.index:
@@ -56,6 +64,10 @@ def extracting_stock_code(name):
     return code
 
 # 이 아래에는 각자 돌아가는 함수만 넣습니다.
+
+def information(name):
+    output = name + "의 information() 입니다."
+    return output
 
 def marketCap(name):
     result = extracting_stock_code(name)
@@ -319,120 +331,4 @@ def netchange(name):
         output = name+' 오늘 1주당 '+temp_numbers[2].strip()+'원 올랐습니다.'
         output = output.replace('상승 ','')
 
-    return output
-
-#비트코인
-
-def bithumb(item, value):
-    # https://www.bithumb.com/u1/US127
-    # 1초당 20회 요청 가능합니다.
-    tempURL = "https://api.bithumb.com/public/ticker/" + item
-    readTicker =urllib.request.urlopen(tempURL).read()
-    jsonTicker = json.loads(readTicker)
-    output = "Bithumb에서 "+item+"의 "+value+"은 "+jsonTicker['data'][value]+"원입니다."
-    return output
-
-def bithumbMetaAPI(item):
-    # https://www.bithumb.com/u1/US127
-    # 1초당 20회 요청 가능합니다.
-    # https://stackoverflow.com/questions/6578986/how-to-convert-json-data-into-a-python-object
-    tempURL = "https://api.bithumb.com/public/ticker/" + item
-    readTicker =urllib.request.urlopen(tempURL).read()
-    jsonTicker = json.loads(readTicker)
-    x = json.loads(readTicker, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-    return x
-
-def bithumb_coins(name):
-    cryptoCurrencies = {"비트코인":"BTC", "이더리움":"ETH",
-                        "이더리움클래식":"ETC", "비트코인캐시":"BCH",
-                        "리플":"XRP","퀀텀":"QTUM"}
-
-    code = cryptoCurrencies[name]
-    bithumb = bithumbMetaAPI(code)
-
-    opening_price = float(bithumb.data.opening_price)
-    closing_price = float(bithumb.data.closing_price)
-    min_price = float(bithumb.data.min_price)
-    max_price = float(bithumb.data.max_price)
-    average_price = float(bithumb.data.average_price)
-    volume_1day = float(bithumb.data.volume_1day)
-    buy_price = float(bithumb.data.buy_price)
-    sell_price = float(bithumb.data.sell_price)
-    data = float(bithumb.data.date)
-
-    output = "< 201_년 _월 _일 빗썸 기준> " + name +" 최근 거래가격은 "+ str(float(closing_price))+"원," + " 현재 매수 호가 최고 가격은 "+ str(float(buy_price)) + "원, " + "매도 호가 최저 가격은 " + str(float(sell_price)) + "입니다." + " 오늘의 시가는 " + str(float(opening_price)) + "원,"+ " 고가는 " + str(float(max_price)) + "원입니다." + " 저가는 " + str(float(min_price)) + "원," +  " 거래량은 " + str(float(volume_1day)) + "건 입니다."
-    return output
-
-
-def coinone(item, value):
-    # print(str(coinoneMetaAPI("퀀텀").completeOrders))
-    # 1초당 20회 요청 가능합니다.
-    tempURL = "https://api.coinone.co.kr/ticker/?currency=" + item
-    readTicker = urllib.request.urlopen(tempURL).read()
-    jsonTicker = json.loads(readTicker)
-    output = "coinone에서 "+item+"의 "+value+"은 "+jsonTicker['last'] + "원입니다."
-    return output
-
-
-def coinoneMetaAPI(name):
-    # 1초당 20회 요청 가능합니다.
-    # https://api.coinone.co.kr/ticker/?currency=bch&format=json
-    coinoneCryptoCurrencies = {
-    "비트코인캐시":"bch", "퀀텀":"qtum", "이더리움클래식":"etc",
-    "비트코인":"btc", "이더리움":"eth", "리플":"xrp","시간":"timestamp"}
-    code = coinoneCryptoCurrencies[name]
-    tempURL = "https://api.coinone.co.kr/ticker/?currency=" + code + "&format=json"
-    readTicker =urllib.request.urlopen(tempURL).read()
-    jsonTicker = json.loads(readTicker)
-    output = json.loads(readTicker, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-    return output
-
-def coinone_coins(name):
-    coinoneCryptoCurrencies = {
-    "비트코인":"btc", "이더리움":"eth",
-    "이더리움클래식":"etc", "비트코인캐시":"bch",
-    "리플":"xrp","퀀텀":"qtum", "시간":"Timestamp"}
-
-    code = coinoneCryptoCurrencies[name]
-    coinone_coins = coinoneMetaAPI(name)
-
-    last = float(coinone_coins.last)
-    first = float(coinone_coins.first)
-    low = float(coinone_coins.low)
-    high = float(coinone_coins.high)
-    volume = float(coinone_coins.volume)
-    output = "< 201_년 _월 _일 코인원 기준> " + name +" 현 시점 거래가격은 "+ str(float(last))+"원, "+ "거래량은 " + str(float(volume)) + "입니다." " 시가는 " + str(float(first)) + "원,"+ " 저가는 " + str(float(low)) + "원," + " 고가는 " + str(float(high)) + "원입니다."
-    return output
-
-def korbit(name):
-    # https://i.k-june.com/wp/4560
-    # 현재 korbit은 api가 없습니다. 최근가만 존재합니다.
-    coinone_cryptoCurrencies = {
-    "비트코인캐시":"bch", "퀀텀":"qtum", "이더리움클래식":"etc",
-    "비트코인":"btc", "이더리움":"eth", "리플":"xrp","시간":"timestamp"}
-    # https://api.korbit.co.kr/v1/ticker?currency_pair=btc_krw
-
-    code = coinone_cryptoCurrencies[name]
-    tempURL = "https://api.korbit.co.kr/v1/ticker?currency_pair=" + code + "_krw"
-    reqBTC = Request(tempURL , headers={'User-Agent': 'Mozilla/5.0'})
-    readTicker =urllib.request.urlopen(reqBTC).read()
-    jsonTicker = json.loads(readTicker)
-    output = "korbit에서 "+name+"의 last은 "+jsonTicker['last']+"원입니다."
-    return output
-
-
-def korbitMetaAPI(name):
-    # https://i.k-june.com/wp/4560
-    # 현재 korbit은 api가 없습니다. 최근가만 존재합니다.
-    coinone_cryptoCurrencies = {
-    "비트코인캐시":"bch", "퀀텀":"qtum", "이더리움클래식":"etc",
-    "비트코인":"btc", "이더리움":"eth", "리플":"xrp","시간":"timestamp"}
-    # https://api.korbit.co.kr/v1/ticker?currency_pair=btc_krw
-
-    code = coinone_cryptoCurrencies[name]
-    tempURL = "https://api.korbit.co.kr/v1/ticker?currency_pair=" + code + "_krw"
-    reqBTC = Request(tempURL , headers={'User-Agent': 'Mozilla/5.0'})
-    readTicker =urllib.request.urlopen(reqBTC).read()
-    jsonTicker = json.loads(readTicker)
-    output = json.loads(readTicker, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
     return output
