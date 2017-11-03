@@ -13,11 +13,11 @@ import requests
 
 app=Flask(__name__)
 bootstrap = Bootstrap(app)
-app.config['SECRET_KEY']='hard to guess string'
+app.config['SECRET_KEY'] = 'hard to guess string'
 
 class NameForm(FlaskForm):
-    name=StringField('내용을 입력하세요.',validators=[Required()])
-    submit=SubmitField('Submit')
+    name = StringField('내용을 입력하세요.',validators=[Required()])
+    submit = SubmitField('Submit')
 
 
 @app.route('/base',methods=['GET','POST'])
@@ -31,15 +31,13 @@ def index():
 
 @app.route('/',methods=['GET','POST'])
 def extract():
-    name=None
-    form=NameForm()
-    table=None
-    result=None
+    name = None
+    form = NameForm()
+    result = None
     if form.validate_on_submit():
-        name=form.name.data
-        result=testing.all_new(testing.split_stock_sentence(name))
-        #table=db.extracting(name)
-        form.name.data=''
+        name = form.name.data
+        result = testing.all_function(name)
+        form.name.data = u''
     return render_template('extract.html',form=form,name=name,result=result)
 
 
@@ -80,4 +78,3 @@ def key():
 
 if __name__ == "__main__":
     app.run(port=8080,host='0.0.0.0',debug=True)
-
