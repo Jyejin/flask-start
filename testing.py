@@ -9,6 +9,7 @@ from urllib.request import HTTPError
 from collections import namedtuple
 from bs4 import BeautifulSoup
 from setting import Settings
+import drawing
 
 
 settings = Settings()
@@ -33,7 +34,7 @@ def split_stock_sentence(sentence):
             item = 'constants'
         elif True in [function == x for function in settings.lopesStockFunctions.index]:
             item = 'function'
-        elif bool(x in settings.KOSPI.index or x in settings.kosdaq.index):
+        elif bool(x in settings.KOSPI.index or x in settings.kosdaq.index or x in settings.cryptoCurrencies.index):
             item = 'item'
         else:
             item = 'error'
@@ -45,22 +46,22 @@ def split_stock_sentence(sentence):
 
 
 def all_function(all_thing):
+    sentence = split_stock_sentence(all_thing)
 
-  sentence= split_stock_sentence(all_thing)
-    try:
-        if 'item' in sentence.keys() and not 'function' in sentence.keys():
-            temp = information(sentence['item'])
-            
-        elif 'item' in sentence.keys() and 'function' in sentence.keys() :
-            temp = eval(settings.lopesStockFunctions.loc[sentence['function'],'functions']+'('+'\''+sentence['item']+'\''+')')
-        return temp
-    except:
-    	return("이보게 바른 말을 입력하시게나")
-    
+    if 'item' in sentence.keys() and not 'function' in sentence.keys():
+        temp = information(sentence['item'])
+
+    elif 'item' in sentence.keys() and 'function' in sentence.keys() :
+        temp = eval(settings.lopesStockFunctions.loc[sentence['function'],'functions']+'('+'\''+sentence['item']+'\''+')')
+    else:
+        temp = "다시 입력해 주세요"
+    return temp
 
 def extracting_stock_code(name):
     if name in settings.KOSPI.index:
         code = settings.KOSPI.loc[name]
+    elif name in settings.cryptoCurrencies.index:
+        code = settings.cryptoCurrencies.loc[name]
     else:
         code = settings.kosdaq.loc[name]
     return code
@@ -68,7 +69,22 @@ def extracting_stock_code(name):
 # 이 아래에는 각자 돌아가는 함수만 넣습니다.
 
 def information(name):
-    output = name + "의 information() 입니다."
+    if name in settings.cryptoCurrencies.index:
+        code = extracting_stock_code(name)
+        output = name + code + "의 information() 입니다."
+    else:
+        soup = extracting_stock_naver(name)
+        table = soup.find_all('table')
+
+        description= soup.find_all('div',{'class':{'description'}})
+        date = description[0].find_all('em',{'class':{'date'}})
+        td_numbers = table[1].find_all('td',{'class':{'num'}})
+        temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+        output = "<2017.09월 3분기 기준> "+name + ' 시가총액 '+ temp_numbers[20] +', 자본금 '+temp_numbers[23]+', 상장주식수 '+temp_numbers[22]+ \
+                ', 액면가'+temp_numbers[10]+', PER(주가수익비율) '+ temp_numbers[16] + ', EPS(주당순이익)' + temp_numbers[17]+\
+                '원입니다. 52주 최고가 ' +  temp_numbers[18] +', 52주 최저가 '+temp_numbers[19]+'입니다. ' +  date[0].text + name +' 현재가 '+ temp_numbers[0]+'원입니다.'
+
     return output
 
 def marketCap(name):

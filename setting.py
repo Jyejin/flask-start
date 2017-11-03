@@ -1,5 +1,17 @@
 #-*- coding:utf-8 -*-
 #데이터를 불러오고 링크를 변환하는 곳입니다.
+import requests
+def download_file(url):
+    local_filename = url.split('/')[-1]
+    # NOTE the stream=True parameter
+    r = requests.get(url, stream=True)
+    with open(local_filename, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk: # filter out keep-alive new chunks
+                f.write(chunk)
+                #f.flush() commented by recommendation from J.F.Sebastian
+    return local_filename
+
 class Settings():
     def __init__(self):
         import pandas as pd
@@ -7,21 +19,29 @@ class Settings():
 
         KOSPI = pd.read_csv("http://lopes.hufs.ac.kr/stockData/name_code_list_KOSPI.csv",index_col='KOSPI_NAME')
         kosdaq = pd.read_csv("http://lopes.hufs.ac.kr/stockData/name_code_list_kosdaq.csv",index_col='KOSDAQ_NAME')
+        cryptoCurrencies=pd.read_csv("http://lopes.hufs.ac.kr/stockData/cryptoCurrencies.csv", index_col='NAME')
 
         KOSPI = KOSPI['CODE']
         kosdaq = kosdaq['CODE']
+        cryptoCurrencies = cryptoCurrencies['CODE']
+        h5FileUrl = 'http://lopes.hufs.ac.kr/stockData/stocks_10_27.h5'
+        filename = download_file(h5FileUrl)
+        stocks = pd.HDFStore(filename)
 
-        #self.name=name
+        self.stocks = stocks
         self.KOSPI = KOSPI
         self.kosdaq = kosdaq
+        self.cryptoCurrencies = cryptoCurrencies
         self.lopes_stock_constants = ['알려줘','어때','어때?']
 
-        lopesStockFunctions = pd.read_csv("http://lopes.hufs.ac.kr/stockData/lopesStockFunction.csv", index_col= "index")
+        lopesStockFunctions = pd.read_csv("lopesStockFunction.csv", index_col= "index")
         self.lopesStockFunctions = lopesStockFunctions
 
     def extracting_stock_code(self,name):
         if name in self.KOSPI.index:
             code = self.KOSPI.loc[name]
+        elif name in cryptoCurrencies.index:
+            code = cryptoCurrencies[name]
         else:
             code = self.kosdaq.loc[name]
 
@@ -40,9 +60,18 @@ class Settings():
 
         return url
 
+    def deciding_catalog(self,name):
+        if name in self.KOSPI.index:
+            catalog = "KS_"
+        elif name in self.kosdaq.index:
+                catalog = "KQ_"
+        else:
+            catalog = "None"
+        return catalog
+
     def url_set_ss(self,data):
 
-        result=None
+        result = None
 
         if data == 'investor':
             result= 'stockInvestorList'
@@ -60,18 +89,3 @@ class Settings():
         url = url_form.format(result=result)
 
         return url
-
-    def bitcoin(self,data):
-        import wget
-        import pandas as pd
-
-        url = 'http://lopes.hufs.ac.kr/stockData/stocks_10_27.h5'
-        filename = wget.download(url)
-        store = pd.HDFStore(filename)
-        df = store[data]
-
-        return df.head()
-
-
-#setting=Settings()
-#setting.bitcoin('KS_066570')
