@@ -13,10 +13,12 @@ index,functions,arguments
 자본금,capitalStock,1
 PER,per,1
 EPS,eps,1
-외국인주식수,foreignShares,1
+외국인현재,foreignShares,1
 액면가,parValue,1
 상한가,highestPrice,1
 하한가,lowestPrice,1
 거래량,volume,1
 등락률,percent,1
 전일대비,netchange,1
+시세, now, 8
+information, information, 10
