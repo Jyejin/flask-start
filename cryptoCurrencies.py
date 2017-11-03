@@ -25,8 +25,8 @@ def bithumbMetaAPI(item):
     # https://stackoverflow.com/questions/6578986/how-to-convert-json-data-into-a-python-object
     tempURL = "https://api.bithumb.com/public/ticker/" + item
     readTicker =urllib.request.urlopen(tempURL).read()
-    jsonTicker = json.loads(readTicker)
-    x = json.loads(readTicker, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+    jsonTicker = json.loads(readTicker.decode('utf-8'))
+    x = json.loads(readTicker.decode('utf-8'), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
     return x
 
 def bithumb_coins(name):
@@ -64,14 +64,14 @@ def coinone(item, value):
 def coinoneMetaAPI(name):
     # 1초당 20회 요청 가능합니다.
     # https://api.coinone.co.kr/ticker/?currency=bch&format=json
-    coinoneCryptoCurrencies = {
+    coinone_cryptoCurrencies = {
     "비트코인캐시":"bch", "퀀텀":"qtum", "이더리움클래식":"etc",
     "비트코인":"btc", "이더리움":"eth", "리플":"xrp","시간":"timestamp"}
-    code = coinoneCryptoCurrencies[name]
+    code = coinone_cryptoCurrencies[name]
     tempURL = "https://api.coinone.co.kr/ticker/?currency=" + code + "&format=json"
     readTicker =urllib.request.urlopen(tempURL).read()
-    jsonTicker = json.loads(readTicker)
-    output = json.loads(readTicker, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+    jsonTicker = json.loads(readTicker.decode('utf-8'))
+    output = json.loads(readTicker.decode('utf-8'), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
     return output
 
 def coinone_coins(name):
@@ -91,23 +91,6 @@ def coinone_coins(name):
     output = "< 201_년 _월 _일 코인원 기준> " + name +" 현 시점 거래가격은 "+ str(float(last))+"원, "+ "거래량은 " + str(float(volume)) + "입니다." " 시가는 " + str(float(first)) + "원,"+ " 저가는 " + str(float(low)) + "원," + " 고가는 " + str(float(high)) + "원입니다."
     return output
 
-def korbit(name):
-    # https://i.k-june.com/wp/4560
-    # 현재 korbit은 api가 없습니다. 최근가만 존재합니다.
-    coinone_cryptoCurrencies = {
-    "비트코인캐시":"bch", "퀀텀":"qtum", "이더리움클래식":"etc",
-    "비트코인":"btc", "이더리움":"eth", "리플":"xrp","시간":"timestamp"}
-    # https://api.korbit.co.kr/v1/ticker?currency_pair=btc_krw
-
-    code = coinone_cryptoCurrencies[name]
-    tempURL = "https://api.korbit.co.kr/v1/ticker?currency_pair=" + code + "_krw"
-    reqBTC = Request(tempURL , headers={'User-Agent': 'Mozilla/5.0'})
-    readTicker =urllib.request.urlopen(reqBTC).read()
-    jsonTicker = json.loads(readTicker)
-    output = "korbit에서 "+name+"의 last은 "+jsonTicker['last']+"원입니다."
-    return output
-
-
 def korbitMetaAPI(name):
     # https://i.k-june.com/wp/4560
     # 현재 korbit은 api가 없습니다. 최근가만 존재합니다.
@@ -115,11 +98,30 @@ def korbitMetaAPI(name):
     "비트코인캐시":"bch", "퀀텀":"qtum", "이더리움클래식":"etc",
     "비트코인":"btc", "이더리움":"eth", "리플":"xrp","시간":"timestamp"}
     # https://api.korbit.co.kr/v1/ticker?currency_pair=btc_krw
+    code = coinone_cryptoCurrencies[name]
+    tempURL = "https://api.korbit.co.kr/v1/ticker?currency_pair=" + code + "_krw"
+    reqBTC = Request(tempURL , headers={'User-Agent': 'Mozilla/5.0'})
+    readTicker =urllib.request.urlopen(reqBTC).read()
+    jsonTicker = json.loads(readTicker.decode('utf-8'))
+    output = json.loads(readTicker.decode('utf-8'), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+    return output
+
+
+def korbit_coins(name):
+    # https://i.k-june.com/wp/4560
+    # 현재 korbit은 api가 없습니다. 최근가만 존재합니다.
+    coinone_cryptoCurrencies = {
+    "비트코인캐시":"bch", "퀀텀":"qtum", "이더리움클래식":"etc",
+    "비트코인":"btc", "이더리움":"eth", "리플":"xrp","시간":"timestamp"}
+    # https://api.korbit.co.kr/v1/ticker?currency_pair=btc_krw
 
     code = coinone_cryptoCurrencies[name]
     tempURL = "https://api.korbit.co.kr/v1/ticker?currency_pair=" + code + "_krw"
     reqBTC = Request(tempURL , headers={'User-Agent': 'Mozilla/5.0'})
     readTicker =urllib.request.urlopen(reqBTC).read()
-    jsonTicker = json.loads(readTicker)
-    output = json.loads(readTicker, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+    jsonTicker = json.loads(readTicker.decode('utf-8'))
+    temp = datetime.datetime.fromtimestamp(int(korbitMetaAPI("이더리움").timestamp)/1000.0)
+
+    output = "코빗(korbit)에서 "+str(temp.year)+"년 "+str(temp.month)+"월 "+str(temp.day)+"일 "+str(temp.hour)+"시 "+str(temp.second)+"분 현재, " + name + "의 거래 가격은 " + jsonTicker['last'] + "원입니다."
+
     return output

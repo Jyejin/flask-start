@@ -350,3 +350,14 @@ def netchange(name):
         output = output.replace('상승 ','')
 
     return output
+
+def now(name):
+    if name in settings.cryptoCurrencies.index:
+        bithumb = bithumb_coins(name)
+        coinone = coinone_coins(name)
+        korbit = korbit_coins(name)
+        output = bithumb + coinone +korbit
+    else:
+        code = extracting_code(name)
+        output = price(name)
+    return output 
