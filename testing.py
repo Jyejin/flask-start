@@ -45,16 +45,18 @@ def split_stock_sentence(sentence):
 
 
 def all_function(all_thing):
-    sentence = split_stock_sentence(all_thing)
 
-    if 'item' in sentence.keys() and not 'function' in sentence.keys():
-        temp = information(sentence['item'])
-
-    elif 'item' in sentence.keys() and 'function' in sentence.keys() :
-        temp = eval(settings.lopesStockFunctions.loc[sentence['function'],'functions']+'('+'\''+sentence['item']+'\''+')')
-    else:
-        temp = "다시 입력해 주세요"
-    return temp
+  sentence= split_stock_sentence(all_thing)
+    try:
+        if 'item' in sentence.keys() and not 'function' in sentence.keys():
+            temp = information(sentence['item'])
+            
+        elif 'item' in sentence.keys() and 'function' in sentence.keys() :
+            temp = eval(settings.lopesStockFunctions.loc[sentence['function'],'functions']+'('+'\''+sentence['item']+'\''+')')
+        return temp
+    except:
+    	return("이보게 바른 말을 입력하시게나")
+    
 
 def extracting_stock_code(name):
     if name in settings.KOSPI.index:
