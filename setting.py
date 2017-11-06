@@ -40,8 +40,8 @@ class Settings():
     def extracting_stock_code(self,name):
         if name in self.KOSPI.index:
             code = self.KOSPI.loc[name]
-        elif name in cryptoCurrencies.index:
-            code = cryptoCurrencies[name]
+        elif name in self.cryptoCurrencies.index:
+            code = self.cryptoCurrencies[name]
         else:
             code = self.kosdaq.loc[name]
 
