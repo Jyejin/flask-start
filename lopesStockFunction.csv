@@ -22,7 +22,7 @@ EPS,eps,1
 전일대비,netchange,1
 시세, now, 8
 information, information, 10
-차트, drawing.chart, 1
+차트, drawing.making_chart, 1
 이격도5일선, tech_disparity_5, 1
 이격도10일선,tech_disparity_10, 1
 이격도15일선, tech_disparity_15, 1
