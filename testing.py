@@ -23,7 +23,6 @@ def extracting_stock_naver(name):
 
     return soup
 
-
 def split_stock_sentence(sentence):
 
     """입력된 문장을 띄어쓰기를 이용해서 분리하는 함수"""
@@ -358,6 +357,6 @@ def now(name):
         korbit = korbit_coins(name)
         output = bithumb + coinone +korbit
     else:
-        code = extracting_code(name)
+        code = extracting_stock_code(name)
         output = price(name)
-    return output 
+    return output
