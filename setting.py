@@ -37,6 +37,15 @@ class Settings():
         lopesStockFunctions = pd.read_csv("lopesStockFunction.csv", index_col= "index")
         self.lopesStockFunctions = lopesStockFunctions
 
+    def extracting_stock_code(self,name):
+        if name in self.KOSPI.index:
+            code = self.KOSPI.loc[name]
+        elif name in self.cryptoCurrencies.index:
+            code = self.cryptoCurrencies[name]
+        else:
+            code = self.kosdaq.loc[name]
+        return code
+    
     def url_set_naver(self,name):
 
         if name in self.KOSPI.index:

@@ -10,6 +10,7 @@ from collections import namedtuple
 from bs4 import BeautifulSoup
 from setting import Settings
 import drawing
+import newFunc
 
 
 settings = Settings()

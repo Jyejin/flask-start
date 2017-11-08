@@ -23,13 +23,13 @@ EPS,eps,1
 시세,now, 8
 information, information, 10
 차트, drawing.making_chart, 1
-이격도5일선, tech_disparity_5, 1
-이격도10일선,tech_disparity_10, 1
-이격도15일선, tech_disparity_15, 1
-1주일수익률, profitRank_5, 1
-2주일수익률, profitRank_10, 1
-1달수익률, profitRank_20, 1
-3달수익률, profitRank_60, 1
-6달수익률, profitRank_120, 1
-1년수익률, profitRank_250, 1
-이격도, tech_disparity, 1
+이격도,newFunc.tech_disparity, 1
+이격도5일선,newFunc.tech_disparity_5, 1
+이격도10일선,newFunc.tech_disparity_10, 1
+이격도15일선,newFunc.tech_disparity_15, 1
+1주일수익률,newFunc.profitRank_5, 1
+2주일수익률,newFunc.profitRank_10, 1
+1달수익률,newFunc.profitRank_20, 1
+3달수익률,newFunc.profitRank_60, 1
+6달수익률,newFunc.profitRank_120, 1
+1년수익률,newFunc.profitRank_250, 1
