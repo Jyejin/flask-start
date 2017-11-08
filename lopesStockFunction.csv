@@ -20,7 +20,7 @@ EPS,eps,1
 거래량,volume,1
 등락률,percent,1
 전일대비,netchange,1
-시세, now, 8
+시세,now, 8
 information, information, 10
 차트, drawing.making_chart, 1
 이격도5일선, tech_disparity_5, 1
