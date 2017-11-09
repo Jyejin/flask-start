@@ -17,9 +17,9 @@ class Settings():
         import pandas as pd
 
 
-        KOSPI = pd.read_csv("http://lopes.hufs.ac.kr/stockData/name_code_list_KOSPI.csv",index_col='KOSPI_NAME')
-        kosdaq = pd.read_csv("http://lopes.hufs.ac.kr/stockData/name_code_list_kosdaq.csv",index_col='KOSDAQ_NAME')
-        cryptoCurrencies=pd.read_csv("http://lopes.hufs.ac.kr/stockData/cryptoCurrencies.csv", index_col='NAME')
+        KOSPI = pd.read_csv("data/name_code_list_KOSPI.csv",index_col='KOSPI_NAME')
+        kosdaq = pd.read_csv("data/name_code_list_kosdaq.csv",index_col='KOSDAQ_NAME')
+        cryptoCurrencies=pd.read_csv("data/cryptoCurrencies.csv", index_col='NAME')
 
         KOSPI = KOSPI['CODE']
         kosdaq = kosdaq['CODE']
@@ -34,7 +34,7 @@ class Settings():
         self.cryptoCurrencies = cryptoCurrencies
         self.lopes_stock_constants = ['알려줘','어때','어때?']
 
-        lopesStockFunctions = pd.read_csv("lopesStockFunction.csv", index_col= "index")
+        lopesStockFunctions = pd.read_csv("data/lopesStockFunction.csv", index_col= "index")
         self.lopesStockFunctions = lopesStockFunctions
 
     def extracting_stock_code(self,name):
@@ -45,7 +45,7 @@ class Settings():
         else:
             code = self.kosdaq.loc[name]
         return code
-    
+
     def url_set_naver(self,name):
 
         if name in self.KOSPI.index:

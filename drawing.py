@@ -16,7 +16,6 @@ def pullStockData(name):
     header = settings.deciding_catalog(name)
     code = settings.extracting_stock_code(name)
     temp = header + str(code).zfill(6)
-    print(temp)
     df =settings.stocks[temp]
     return df
 
@@ -67,3 +66,5 @@ def making_chart(certainName, year='2017'):
 
     #loc 한 걸 차트 함수로 받아줘야 한다.
     return (chart(stockChart))
+
+#print(making_chart("삼성전자"))
