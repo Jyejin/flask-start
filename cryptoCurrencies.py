@@ -7,6 +7,7 @@ from pandas import DataFrame
 from urllib.request import Request, urlopen
 from urllib.request import HTTPError
 from collections import namedtuple
+import datetime
 from bs4 import BeautifulSoup
 from setting import Settings
 
@@ -14,7 +15,7 @@ def bithumb(item, value):
     # https://www.bithumb.com/u1/US127
     # 1초당 20회 요청 가능합니다.
     tempURL = "https://api.bithumb.com/public/ticker/" + item
-    readTicker =urllib.request.urlopen(tempURL).read()
+    readTicker = urlopen(tempURL).read()
     jsonTicker = json.loads(readTicker)
     output = "Bithumb에서 "+item+"의 "+value+"은 "+jsonTicker['data'][value]+"원입니다."
     return output
@@ -24,7 +25,7 @@ def bithumbMetaAPI(item):
     # 1초당 20회 요청 가능합니다.
     # https://stackoverflow.com/questions/6578986/how-to-convert-json-data-into-a-python-object
     tempURL = "https://api.bithumb.com/public/ticker/" + item
-    readTicker =urllib.request.urlopen(tempURL).read()
+    readTicker =urlopen(tempURL).read()
     jsonTicker = json.loads(readTicker.decode('utf-8'))
     x = json.loads(readTicker.decode('utf-8'), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
     return x
@@ -55,7 +56,7 @@ def coinone(item, value):
     # print(str(coinoneMetaAPI("퀀텀").completeOrders))
     # 1초당 20회 요청 가능합니다.
     tempURL = "https://api.coinone.co.kr/ticker/?currency=" + item
-    readTicker = urllib.request.urlopen(tempURL).read()
+    readTicker = urlopen(tempURL).read()
     jsonTicker = json.loads(readTicker)
     output = "coinone에서 "+item+"의 "+value+"은 "+jsonTicker['last'] + "원입니다."
     return output
@@ -69,7 +70,7 @@ def coinoneMetaAPI(name):
     "비트코인":"btc", "이더리움":"eth", "리플":"xrp","시간":"timestamp"}
     code = coinone_cryptoCurrencies[name]
     tempURL = "https://api.coinone.co.kr/ticker/?currency=" + code + "&format=json"
-    readTicker =urllib.request.urlopen(tempURL).read()
+    readTicker =urlopen(tempURL).read()
     jsonTicker = json.loads(readTicker.decode('utf-8'))
     output = json.loads(readTicker.decode('utf-8'), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
     return output
@@ -101,7 +102,7 @@ def korbitMetaAPI(name):
     code = coinone_cryptoCurrencies[name]
     tempURL = "https://api.korbit.co.kr/v1/ticker?currency_pair=" + code + "_krw"
     reqBTC = Request(tempURL , headers={'User-Agent': 'Mozilla/5.0'})
-    readTicker =urllib.request.urlopen(reqBTC).read()
+    readTicker =urlopen(reqBTC).read()
     jsonTicker = json.loads(readTicker.decode('utf-8'))
     output = json.loads(readTicker.decode('utf-8'), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
     return output
@@ -118,7 +119,7 @@ def korbit_coins(name):
     code = coinone_cryptoCurrencies[name]
     tempURL = "https://api.korbit.co.kr/v1/ticker?currency_pair=" + code + "_krw"
     reqBTC = Request(tempURL , headers={'User-Agent': 'Mozilla/5.0'})
-    readTicker =urllib.request.urlopen(reqBTC).read()
+    readTicker =urlopen(reqBTC).read()
     jsonTicker = json.loads(readTicker.decode('utf-8'))
     temp = datetime.datetime.fromtimestamp(int(korbitMetaAPI("이더리움").timestamp)/1000.0)
 

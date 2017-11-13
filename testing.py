@@ -12,7 +12,7 @@ from setting import Settings
 import drawing
 import groupFunc
 import newFunc
-
+import cryptoCurrencies
 
 settings = Settings()
 
@@ -359,11 +359,31 @@ def netchange(name):
 
 def now(name):
     if name in settings.cryptoCurrencies.index:
-        bithumb = bithumb_coins(name)
-        coinone = coinone_coins(name)
-        korbit = korbit_coins(name)
+        bithumb = cryptoCurrencies.bithumb_coins(name)
+        coinone = cryptoCurrencies.coinone_coins(name)
+        korbit = cryptoCurrencies.korbit_coins(name)
         output = bithumb + coinone +korbit
     else:
-        code = extracting_stock_code(name)
-        output = price(name)
+        form='''{0} 현재가 {1}원,전일대비등락률 {2}이며,전일대비 1주당 {3}원 {4}하였습니다.전일가는 {5}원이었습니다. 오늘의 거래량은 {6}입니다. 시가 {7}({8}%),고가 {9}({10}%),저가 {11}({12}%)원입니다.'''
+
+        soup = extracting_stock_naver(name)
+        table = soup.find_all('table')
+        td_numbers = table[1].find_all('td',{'class':{'num'}})
+        temp_numbers = [td_number.text.translate({ord('\n'): ' ',ord('\t'): '' }) for td_number in td_numbers]
+
+        def normalize(index):
+            result=temp_numbers[index]
+            return int(result.replace(',', ''))
+
+        yesterday=normalize(5)
+        today=normalize(7)
+        maxprice=normalize(9)
+        minprice=normalize(11)
+
+        yesper=round(((yesterday-today)/yesterday)*100,2)
+        maxper=round(((yesterday-maxprice)/yesterday)*100,2)
+        minper=round(((yesterday-minprice)/yesterday)*100,2)
+
+        output = form.format(name,temp_numbers[0],temp_numbers[4].strip(),temp_numbers[2].strip()[3:],temp_numbers[2].strip()[0:2],temp_numbers[5],temp_numbers[6],temp_numbers[7],yesper,temp_numbers[9],maxper,temp_numbers[11],minper)
+
     return output
