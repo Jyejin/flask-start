@@ -1,6 +1,7 @@
 #-*- coding:utf-8 -*-
 #데이터를 불러오고 링크를 변환하는 곳입니다.
 import requests
+
 def download_file(url):
     local_filename = url.split('/')[-1]
     # NOTE the stream=True parameter
@@ -16,23 +17,25 @@ class Settings():
     def __init__(self):
         import pandas as pd
 
-
         KOSPI = pd.read_csv("data/name_code_list_KOSPI.csv",index_col='KOSPI_NAME')
         kosdaq = pd.read_csv("data/name_code_list_kosdaq.csv",index_col='KOSDAQ_NAME')
         cryptoCurrencies=pd.read_csv("data/cryptoCurrencies.csv", index_col='NAME')
+        group_list = pd.read_csv("data/stock_thema.csv")
 
         KOSPI = KOSPI['CODE']
         kosdaq = kosdaq['CODE']
         cryptoCurrencies = cryptoCurrencies['CODE']
-        h5FileUrl = 'http://lopes.hufs.ac.kr/stockData/stocks_10_27.h5'
-        filename = download_file(h5FileUrl)
+        #h5FileUrl = 'http://lopes.hufs.ac.kr/stockData/stocks_10_27.h5'
+        filename = 'data/stocks_10_27.h5'
         stocks = pd.HDFStore(filename)
+
 
         self.stocks = stocks
         self.KOSPI = KOSPI
         self.kosdaq = kosdaq
         self.cryptoCurrencies = cryptoCurrencies
         self.lopes_stock_constants = ['알려줘','어때','어때?']
+        self.group_list = group_list
 
         lopesStockFunctions = pd.read_csv("data/lopesStockFunction.csv", index_col= "index")
         self.lopesStockFunctions = lopesStockFunctions

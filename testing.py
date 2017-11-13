@@ -10,6 +10,7 @@ from collections import namedtuple
 from bs4 import BeautifulSoup
 from setting import Settings
 import drawing
+import groupFunc
 import newFunc
 
 
@@ -28,7 +29,6 @@ def split_stock_sentence(sentence):
 
     """입력된 문장을 띄어쓰기를 이용해서 분리하는 함수"""
     def finding_lopes_stock_constants(x):
-
         # 아랫 줄은 '어때'와 같은 settings.lopes_stock_constants 에 들어 있는
         if True in [constant == x for constant in settings.lopes_stock_constants]:
             item = 'constants'
@@ -36,6 +36,8 @@ def split_stock_sentence(sentence):
             item = 'function'
         elif bool(x in settings.KOSPI.index or x in settings.kosdaq.index or x in settings.cryptoCurrencies.index):
             item = 'item'
+        elif x in settings.group_list.columns:
+            item = 'group'
         else:
             item = 'error'
         return item
@@ -53,8 +55,12 @@ def all_function(all_thing):
 
     elif 'item' in sentence.keys() and 'function' in sentence.keys() :
         temp = eval(settings.lopesStockFunctions.loc[sentence['function'],'functions']+'('+'\''+sentence['item']+'\''+')')
+
+    elif 'group' in sentence.keys() and not ():
+        temp = groupFunc.group_profit(sentence['group'])
+
     else:
-        temp = "다시 입력해 주세요"
+        temp ="다시 입력하세요"
     return temp
 
 def extracting_stock_code(name):
