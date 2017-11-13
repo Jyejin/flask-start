@@ -56,7 +56,7 @@ def all_function(all_thing):
     elif 'item' in sentence.keys() and 'function' in sentence.keys() :
         temp = eval(settings.lopesStockFunctions.loc[sentence['function'],'functions']+'('+'\''+sentence['item']+'\''+')')
 
-    elif 'group' in sentence.keys() and not ():
+    elif 'group' in sentence.keys():
         temp = groupFunc.group_profit(sentence['group'])
 
     else:
