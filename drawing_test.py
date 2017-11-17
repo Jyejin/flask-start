@@ -45,6 +45,6 @@ def df_to_np(data):
 
 def making_chartUrl(certainName, year='2017'):
 
-    output = "http://127.0.0.1:8080/chart/"+certainName
+    output = "http://0.0.0.0:8080/chart/"+certainName
 
     return output

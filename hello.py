@@ -2,7 +2,6 @@
 
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from flask import redirect, url_for
 from flask import Flask, request,render_template
 from wtforms import StringField, SubmitField
 from wtforms.validators import Required
@@ -91,8 +90,6 @@ def data(name):
 @app.route('/chart/<name>')
 def chart(name):
     return render_template("chart.html",name=name)
-
-
 
 if __name__ == "__main__":
     app.run(port=8080,host='0.0.0.0',debug=True)
