@@ -13,6 +13,7 @@ import drawing
 import groupFunc
 import newFunc
 import cryptoCurrencies
+import drawing_test
 
 settings = Settings()
 

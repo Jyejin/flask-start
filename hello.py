@@ -2,10 +2,14 @@
 
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
+from flask import redirect, url_for
 from flask import Flask, request,render_template
 from wtforms import StringField, SubmitField
 from wtforms.validators import Required
+from pandas import DataFrame
+import pandas as pd
 import testing
+import drawing_test
 
 # For Chatbot
 import json
@@ -74,6 +78,20 @@ def message():
 def key():
     return """{ "type" : "buttons",
                 "buttons" : """+'["'+'","'.join(default)+'"]'+"""}"""
+
+@app.route('/data/')
+@app.route('/data/<name>')
+def data(name):
+    data = drawing_test.pullStockData(name)
+    data = data.loc['2017']
+    data = drawing_test.df_to_np(data)
+
+    return data
+
+@app.route('/chart/<name>')
+def chart(name):
+    return render_template("chart.html",name=name)
+
 
 
 if __name__ == "__main__":
