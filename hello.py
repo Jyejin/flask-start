@@ -91,5 +91,14 @@ def data(name):
 def chart(name):
     return render_template("chart.html",name=name)
 
+@app.route('/test/<name>')
+def test(name):
+    data = drawing_test.pullStockData(name)
+    data = data.loc['2017']
+    data = drawing_test.h5_to_csv(data)
+    data = data.replace("\n","\\n")
+    return render_template('test.html',data=data)
+
+
 if __name__ == "__main__":
-    app.run(port=8080,host='0.0.0.0',debug=True)
+    app.run(port=8000,host='0.0.0.0',debug=True)

@@ -42,6 +42,14 @@ def df_to_np(data):
 
     return json_file
 
+def h5_to_csv(data):
+    data.reset_index(inplace=True)
+    data=data.rename(columns={'index':'Date'})
+    data = DataFrame(data, columns=['Date','Open','High','Low','Close','Volume'])
+    data['Date']=data['Date'].dt.strftime('%Y-%m-%d')
+    csv_file = data.to_csv(sep=',',index=False)
+    return csv_file
+
 
 def making_chartUrl(certainName, year='2017'):
 
