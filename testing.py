@@ -39,6 +39,7 @@ def split_stock_sentence(sentence):
             item = 'item'
         elif x in settings.group_list.columns:
             item = 'group'
+
         else:
             item = 'error'
         return item
@@ -46,6 +47,7 @@ def split_stock_sentence(sentence):
     lopes_stock_constants =[finding_lopes_stock_constants(item) for item in sentence.split(' ')]
 
     return (dict(zip(lopes_stock_constants, sentence.split(' '))))
+
 
 
 def all_function(all_thing):
@@ -60,9 +62,13 @@ def all_function(all_thing):
     elif 'group' in sentence.keys():
         temp = groupFunc.group_profit(sentence['group'])
 
+    elif 'function' in sentence.keys() and len(sentence.keys())==1:
+        temp = eval(settings.lopesStockFunctions.loc[sentence['function'],'functions'] +'()')
+
     else:
         temp ="다시 입력하세요"
     return temp
+
 
 def extracting_stock_code(name):
     if name in settings.KOSPI.index:

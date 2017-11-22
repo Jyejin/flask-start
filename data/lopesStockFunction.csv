@@ -35,7 +35,9 @@ information, information,10
 1년수익률,newFunc.profitRank_250,1
 화장품,newFunc.cosmetics_1mth_profit_now,1
 화장품 PER,newFunc.cosmetics_per_now,1
+화장품PER,newFunc.cosmetics_per_now,1
 내 주식,newFunc.my_list,1
+내주식,newFunc.my_list,1
 관심종목,newFunc.interest_list,1
 아룬,newFunc.aroon,1
 투자심리도,newFunc.investmentIndex,1

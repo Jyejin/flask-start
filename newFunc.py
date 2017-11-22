@@ -1,5 +1,6 @@
 from setting import Settings
 import testing
+import operator
 
 settings = Settings()
 
@@ -69,12 +70,18 @@ def tech_disparity_15(name, ranges = 15):
     result = round((temp['Close'][-1]/(sum(temp['Close'][-ranges::])/ranges))*100, 2)
     return(format(result,'0.2f'))
 
+def tech_disparity_20(name, ranges = 20):
+    '''오늘 종가와 20일동안 이격도 계산'''
+    temp = pullStockData(name)
+    result = round((temp['Close'][-1]/(sum(temp['Close'][-ranges::])/ranges))*100, 2)
+    return(format(result,'0.2f'))
+
 def aroon(s, n=25):
     from pandas import DataFrame, Series
     from pandas.stats import moments
-
-    up = 100 * moments.rolling_apply(s.High, n + 1, lambda x: x.argmax()) / n
-    dn = 100 * moments.rolling_apply(s.Low, n + 1, lambda x: x.argmin()) / n
+    s = pullStockData(s)
+    up = 100 * moments.rolling_apply(s['High'], n + 1, lambda x: x.argmax()) / n
+    dn = 100 * moments.rolling_apply(s['Low'], n + 1, lambda x: x.argmin()) / n
 
     return DataFrame(dict(up=up, down=dn))
 
@@ -139,30 +146,26 @@ def my_list():
     result_profit = "<자네의 20거래일 수익률은 다음과 같네> \\n\\n"
     for mine in mines:
         temp_result = testing.price(mine)
-        print(temp_result)
         temp_result2 = testing.percent(mine)
         temp_now = temp_result + " \\n" + temp_result2 + " \\n\\n"
         result_now += temp_now
-        temp_result = profitRank_20(mine, 20)
+        temp_result = profitRank_20(mine)
         temp_profit = mine + ' ' + temp_result + '%' + " \\n"
         result_profit += temp_profit
-        print(result_profit)
 
     output = result_now + '\\n\\n' + result_profit + '\\n\\n' + "자네, 주식 내공이 참 대단하네. 앞으로도 성투하게나. 무운을 비네!"
     return(output)
-
-
 
 def interest_list():
     mines = ['SK하이닉스','아모레퍼시픽','현대위아','롯데쇼핑','KTB투자증권']
     result_profit = "< 자네가 마음쓰는 주식들의 한달간 근황일세 > \\n\\n"
     result_disparity = "< 주가의 상태도 한번 살펴보세 > \\n\\n"
     for mine in mines:
-        temp_result = profitRank_20(mine, 20)
+        temp_result = profitRank_20(mine)
         temp_profit = mine + ' ' + temp_result + '%' + " \\n"
         result_profit += temp_profit
 
-        temp_result = tech_disparity_20(mine, 20)
+        temp_result = tech_disparity_20(mine)
         temp_disparity = mine + ' ' + temp_result + " \\n"
         result_disparity += temp_disparity
 
@@ -171,22 +174,23 @@ def interest_list():
     return(output)
 
 
-def cosmetics_1mth_profit(ranges = 20):
+def cosmetics_1mth_profit():
     cosmetics = ['아모레퍼시픽', 'LG생활건강', '코스맥스', '한국콜마홀딩스', '한국콜마', '콜마비앤에이치', '한국화장품', '한국화장품제조', '토니모리', '코리아나', '코스온', '제이준코스메틱', '리더스코스메틱', '네오팜', '에스디생명공학', '제닉', '에이씨티', '잇츠한불', '잉글우드랩', '글로본', '에이블씨엔씨', '클리오', '코스메카코리아', '세화피앤씨', '오가닉티코스메틱', 'SK바이오랜드', 'MP한강']
     result = "<화장품 종목의 한달 수익률 입니다> \\n"
     for cosmetic in cosmetics:
-        temp_result = profitRank_20(cosmetic, ranges)
+        temp_result = profitRank_20(cosmetic)
         temp_text = cosmetic +  " " + temp_result + "%" + " \\n"
         result += temp_text
     #print(result)
     return(result)
+
 def cosmetics_1mth_profit_now(ranges = 20):
     cosmetics = ['아모레퍼시픽', 'LG생활건강', '코스맥스', '한국콜마홀딩스', '한국콜마', '콜마비앤에이치', '한국화장품', '한국화장품제조', '토니모리', '코리아나', '코스온', '제이준코스메틱', '리더스코스메틱', '에스디생명공학', '제닉', '에이씨티', '잇츠한불', '잉글우드랩', '글로본', '에이블씨엔씨', '클리오', '코스메카코리아', '세화피앤씨', '오가닉티코스메틱', 'SK바이오랜드', 'MP한강']
     result = "<화장품 종목의 지난 한달 수익률 입니다> \\n\\n"
     temp_list = {}
     rank = 1
     for cosmetic in cosmetics:
-        temp_result = profitRank_20(cosmetic, ranges)
+        temp_result = profitRank_20(cosmetic)
         temp_list[cosmetic] = temp_result
     results = sorted(temp_list.items(), key=operator.itemgetter(1),reverse=True)
     for k,v in results:
@@ -195,6 +199,7 @@ def cosmetics_1mth_profit_now(ranges = 20):
         rank += 1
 
     return(result)
+
 def cosmetics_per_now():
     cosmetics = ['아모레퍼시픽', 'LG생활건강', '코스맥스', '한국콜마홀딩스', '한국콜마', '콜마비앤에이치', '한국화장품', '한국화장품제조', '토니모리', '코리아나', '코스온', '제이준코스메틱', '리더스코스메틱', '에스디생명공학', '제닉', '에이씨티', '잇츠한불', '잉글우드랩', '글로본', '에이블씨엔씨', '클리오', '코스메카코리아', '세화피앤씨', '오가닉티코스메틱', 'SK바이오랜드', 'MP한강']
     result = "< 화장품 종목의 PER를 들고 왔네 > \\n(11.08일 기준) \\n\\n"
