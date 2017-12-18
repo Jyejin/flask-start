@@ -12,8 +12,10 @@ from matplotlib.finance import candlestick_ohlc
 from setting import Settings
 from flask import url_for
 import json
+from flask import Flask, render_template, Blueprint
 
 settings = Settings()
+chart = Blueprint("chart", __name__)
 
 class MyEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -42,17 +44,16 @@ def df_to_np(data):
 
     return json_file
 
-def h5_to_csv(data):
-    data.reset_index(inplace=True)
-    data=data.rename(columns={'index':'Date'})
-    data = DataFrame(data, columns=['Date','Open','High','Low','Close','Volume'])
-    data['Date']=data['Date'].dt.strftime('%Y-%m-%d')
-    csv_file = data.to_csv(sep=',',index=False)
-    return csv_file
+@chart.route('/data/<name>')
+def data(name):
+    data = pullStockData(name)
+    data = data.loc['2017']
+    data = df_to_np(data)
 
+    return data
 
-def making_chartUrl(certainName, year='2017'):
-
-    output = "http://lopes.hufs.ac.kr:32779/chart/"+certainName
-
-    return output
+@chart.route('/<name>')
+def drawingchart(name):
+    resp = render_template('chart.html',name=name)
+    data = {'html':resp}
+    return json.dumps(data, ensure_ascii=False)
