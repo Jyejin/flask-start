@@ -17,7 +17,7 @@ app.register_blueprint(profit, url_prefix="/profit")
 app.register_blueprint(chart, url_prefix="/chart")
 app.register_blueprint(fundamentalanalysis, url_prefix="/fundamentalanalysis")
 app.register_blueprint(technicalanalysis, url_prefix="/technicalanalysis")
-app.register_blueprint(thema, url_prefix="/")
+app.register_blueprint(thema, url_prefix="/thema")
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',port=8000,debug=True)
+    app.run(port=8300,debug=True)

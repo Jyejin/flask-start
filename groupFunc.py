@@ -10,7 +10,7 @@ import fundamentalAnalysis
 import technicalAnalysis
 
 settings=Settings()
-data_list= settings.group_list
+data_list= settings.group_lists
 thema = Blueprint('thema',__name__)
 
 

@@ -20,7 +20,9 @@ class Settings():
         KOSPI = pd.read_csv("data/name_code_list_KOSPI.csv",index_col='KOSPI_NAME')
         kosdaq = pd.read_csv("data/name_code_list_kosdaq.csv",index_col='KOSDAQ_NAME')
         cryptoCurrencies=pd.read_csv("data/cryptoCurrencies.csv", index_col='NAME')
-        group_list = pd.read_csv("data/stock_sector.csv")
+        group_list = pd.read_csv("data/stock_sector_renewal_1.csv")
+        temp = pd.read_csv("data/stock_thema_renewal_1.csv")
+        group_lists = group_list.append(temp)
         explainingFunction = pd.read_csv("data/explainingFunction.csv",index_col='functionName')
 
         KOSPI = KOSPI['CODE']
@@ -36,7 +38,7 @@ class Settings():
         self.kosdaq = kosdaq
         self.cryptoCurrencies = cryptoCurrencies
         self.lopes_stock_constants = ['알려줘','어때','어때?']
-        self.group_list = group_list
+        self.group_lists = group_lists
         self.explainingFunction = explainingFunction
 
         lopesStockFunctions = pd.read_csv("data/lopesStockFunction.csv", index_col= "index")
